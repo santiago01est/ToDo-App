@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_todo_app/constants/colors.dart';
+import '../constants/colors.dart';
+import '../model/todo.dart';
+import '../widgets/todo_item.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
+
+  final todoslist = ToDo.toDoList();
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +20,26 @@ class Home extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(children: [
           searchBox(),
+          Expanded(
+            child: ListView(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 50, bottom: 50),
+                  child: Text(
+                    'All ToDos',
+                    style: TextStyle(
+                        color: tdBlack,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                for (ToDo todoo in todoslist)
+                  ToDoItem(
+                    todo: todoo,
+                  ),
+              ],
+            ),
+          )
         ]),
       ),
     );
@@ -64,7 +88,7 @@ AppBar _buildAppBar() {
         height: 40,
         width: 40,
         child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(30),
             child: Image.asset('assets/images/icono.png')),
       )
     ]),
