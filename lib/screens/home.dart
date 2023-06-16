@@ -13,7 +13,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final todoslist = ToDo.toDoList();
+  List<ToDo> _foundToDo = [];
   final _todoController = TextEditingController();
+
+  @override
+  void initState() {
+    _foundToDo = todoslist;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +48,7 @@ class _HomeState extends State<Home> {
                             fontWeight: FontWeight.w500),
                       ),
                     ),
-                    for (ToDo todoo in todoslist)
+                    for (ToDo todoo in _foundToDo.reversed)
                       ToDoItem(
                         todo: todoo,
                         onToDoChanged: _handleTodoChanged,
@@ -131,35 +138,53 @@ class _HomeState extends State<Home> {
         todoText: toDo,
       ));
     });
+    _todoController.clear();
   }
-}
 
-Widget searchBox() {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 15),
-    decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(20)),
-    child: const TextField(
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(0),
-        prefixIcon: Icon(
-          Icons.search,
-          color: tdBlack,
-          size: 20,
-        ),
-        prefixIconConstraints: BoxConstraints(
-          maxHeight: 20,
-          minWidth: 25,
-        ),
-        border: InputBorder.none,
-        hintText: 'Search',
-        hintStyle: TextStyle(
-          color: tdGrey,
-          height: 1.5, // Ajusta este valor según sea necesario
+  void _runFilter(String enteredKeyword) {
+    List<ToDo> results = [];
+    if (enteredKeyword.isEmpty) {
+      results = todoslist;
+    } else {
+      results = todoslist
+          .where((item) => item.todoText!
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+    setState(() {
+      _foundToDo = results;
+    });
+  }
+
+  Widget searchBox() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      child: TextField(
+        onChanged: (value) => _runFilter(value),
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(0),
+          prefixIcon: Icon(
+            Icons.search,
+            color: tdBlack,
+            size: 20,
+          ),
+          prefixIconConstraints: BoxConstraints(
+            maxHeight: 20,
+            minWidth: 25,
+          ),
+          border: InputBorder.none,
+          hintText: 'Search',
+          hintStyle: TextStyle(
+            color: tdGrey,
+            height: 1.5, // Ajusta este valor según sea necesario
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 AppBar _buildAppBar() {
