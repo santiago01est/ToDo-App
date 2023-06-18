@@ -106,7 +106,7 @@ class _HomeState extends State<Home> {
                         _addTodo(_todoController.text);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: tdBlue,
+                        backgroundColor: tdBlueDark,
                         minimumSize: const Size(60, 60),
                         elevation: 10,
                       ),
@@ -200,9 +200,8 @@ AppBar _buildAppBar() {
       Container(
         height: 40,
         width: 40,
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: Image.asset('assets/images/icono.png')),
+        child: CircleAvatar(
+            radius: 20, backgroundImage: AssetImage('assets/images/icono.png')),
       )
     ]),
   );
